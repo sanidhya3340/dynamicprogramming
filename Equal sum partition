@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool t[502][502];
+
+bool subset(int wt[],int w,int n){
+    if(n==0 || w==0){
+        return 0;
+    }
+    for(int i=0;i<n+1;i++){
+        for(int j=0;j<w+1;j++){
+            if(j==0){
+                t[i][j]=true;
+            }
+            else if(i==0){
+                t[i][j]=false;
+            }
+        }
+    }
+
+    
+    for(int i=1;i<n+1;i++){
+        for(int j=1;j<w+1;j++){
+            if(wt[i-1]<=j){
+                t[i][j]= t[i][j-wt[i-1]] || t[i-1][j];
+            }
+            else if(wt[i-1]>j){
+                t[i][j]=t[i-1][j];
+            }
+        }
+    }
+
+    for(int i=0;i<n+1;i++){
+        for(int j=0;j<w+1;j++){
+            cout<<t[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+
+
+    return t[n][w];
+}
+
+int main(){
+    int wt[]={1, 5, 11, 5};
+    int n = 4;
+    int sum=0;
+    for(int i=0;i<n;i++){
+        sum+=wt[i];
+    }
+
+    if(sum%2!=0){
+        cout<<"Not possible";
+    }    
+    else
+    cout<<subset(wt,sum/2,n);
+}
