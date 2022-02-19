@@ -44,7 +44,7 @@ bool subset(int wt[],int w,int n){
 int main(){
     int wt[]={2,4,7,8,10};
 
-    int w = 1;
+    int w = 11;
 
     int n = 5;
 
