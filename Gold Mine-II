@@ -1,0 +1,64 @@
+//Gold Mine-II
+#include<bits/stdc++.h>
+using namespace std;
+const int N=7;
+vector<int>bag;
+void util(int arr[N][N],vector<vector<bool>>&vis,int i,int j){
+    if(i<0 || j<0 || i>=N || j>=N || vis[i][j] || arr[i][j]==0){
+        return;
+    }
+
+    vis[i][j]=true;
+    // cout<<"adding"<<endl;
+    bag.push_back(arr[i][j]);
+
+    util(arr,vis,i+1,j);
+    util(arr,vis,i,j+1);
+    util(arr,vis,i-1,j);
+    util(arr,vis,i,j-1);
+    // bag.pop_back();
+}
+
+int getmaxgold(int arr[N][N]){
+    vector<vector<bool>>vis(N,vector<bool>(N,false));
+    int max=INT_MIN;
+    for(int i=0;i<N;i++){
+        for(int j=0;j<N;j++){
+            if(arr[i][j]!=0){
+                bag.resize(0);
+                util(arr,vis,i,j);
+                // cout<<bag.size()<<endl;
+                int sum=0;
+                for(auto x:bag){
+                    
+                    sum+=x;
+                }
+                // cout<<sum<<endl;
+                if(sum>max){
+                    max=sum;
+                }
+                
+            }
+        }
+    }
+
+    return max;
+}
+
+int main()
+{
+    int arr[N][N]= {{10,0,100,20,0 ,8 ,0 },
+                    {20,0,0  ,0  ,0 ,6 ,0 },
+                    {30,0,0  ,9  ,12,3 ,4 },
+                    {40,0,2  ,5  ,8 ,3 ,11},
+                    {0 ,0,0  ,0  ,0 ,9 ,0 },
+                    {5 ,6,7  ,0  ,7 ,4 ,2 },
+                    {8 ,9,10 ,0  ,1 ,10,8}};
+
+    // cout<<arr[4]<<endl;
+
+    cout<<getmaxgold(arr);
+
+    return 0;
+
+}
