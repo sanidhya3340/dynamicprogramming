@@ -1,0 +1,74 @@
+//Print all Paths with Minimum Jumps Dynamic Programming
+#include<bits/stdc++.h>
+using namespace std;
+
+class Pair{
+public:
+    int i;
+    int s;
+    int j;
+    string asf;
+
+    Pair(int ii,int is,int ij,string isaf){
+        i=ii;
+        s=is;
+        j=ij;
+        asf=isaf;
+    }
+};
+
+void solve(vector<int>arr,int n){
+    vector<int>dp(n,-1);
+
+    dp[n-1] = 0;
+
+    for(int i=n-1;i>=0;i--){
+        int steps = arr[i];
+        int mn=INT_MAX;
+        for(int j=1;j<=steps && i+j<n;j++){
+            if(dp[i+j]!=-1 && dp[i+j]<mn){
+                mn = dp[i+j];
+            }
+        }
+        if(mn!=INT_MAX)
+            dp[i] = mn+1;
+    }
+
+
+    cout<<dp[0];
+
+
+    queue<Pair>q;
+
+    q.push(Pair(0,arr[0],dp[0],"0"));
+
+    while(!q.empty()){
+        Pair rem = q.front();
+        q.pop();
+
+        if(rem.j == 0){
+            cout<<rem.asf<<endl;
+        }
+
+        for(int j=0;j<=rem.s && rem.i +j <arr.size();j++){
+
+            int ci = rem.i+j;
+            if(dp[rem.i+j]!=-1 && dp[rem.i+j] == rem.j - 1){
+                q.push(Pair(rem.i+j,arr[rem.i+j],dp[rem.i+j],rem.asf+"->"+to_string(ci)));
+            }
+        }
+    }
+}
+
+int main()
+{
+
+   vector<int>arr(10);
+   for(int i=0;i<10;i++){
+    cin>>arr[i];
+   }
+
+
+   solve(arr,10);
+
+}
