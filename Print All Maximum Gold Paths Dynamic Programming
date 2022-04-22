@@ -1,0 +1,119 @@
+//Print All Minimum Cost Paths Dynamic Programming
+#include<bits/stdc++.h>
+using namespace std;
+
+class Pair{
+public:
+    string psf;
+    int i;
+    int j;
+
+    Pair(string ipsf,int ii,int ij){
+        psf = ipsf;
+        i = ii;
+        j = ij;
+    }
+};
+
+void solve(vector<vector<int>>arr){
+
+    vector<vector<int>>dp(arr.size(),vector<int>(arr[0].size()));
+    int mx = INT_MIN;
+    for(int j=arr[0].size()-1;j>=0;j--){
+        for(int i=arr.size()-1;i>=0;i--){
+            if(j == arr[0].size()-1){
+                dp[i][j] = arr[i][j];
+            }
+            else if(i == 0){
+                dp[i][j] = arr[i][j] + max(dp[i][j+1],dp[i+1][j+1]);
+            }
+            else if(i == arr.size()-1){
+                dp[i][j] = arr[i][j] + max(dp[i][j+1],dp[i-1][j+1]);
+            }
+            else{
+                dp[i][j] = arr[i][j] + max(max(dp[i][j+1],dp[i-1][j+1]),dp[i+1][j+1]);
+            }
+
+        }
+    }
+    queue<Pair>q;
+    for(int i=0;i<dp.size();i++){
+        if(dp[i][0]>mx){
+            mx = dp[i][0];
+        }
+    }
+
+    for(int i=0;i<dp.size();i++){
+        if(dp[i][0] == mx){
+            q.push(Pair("("+to_string(arr[i][0])+","+to_string(i)+","+to_string(0)+"),",i,0));
+        }
+    }
+
+    while(!q.empty()){
+
+        Pair t = q.front();
+        q.pop();
+
+        if(t.j == dp[0].size()-1){
+            cout<<t.psf<<endl;
+        }else if(t.i==0){
+                if(dp[t.i+1][t.j+1]>dp[t.i][t.j+1]){
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i+1][t.j+1])+","+to_string(t.i+1)+","+to_string(t.j+1)+"),",t.i+1,t.j+1));
+                }
+                else if(dp[t.i+1][t.j+1]<dp[t.i][t.j+1]){
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i][t.j+1])+","+to_string(t.i)+","+to_string(t.j+1)+"),",t.i,t.j+1));
+                }
+                else{
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i+1][t.j+1])+","+to_string(t.i+1)+","+to_string(t.j+1)+"),",t.i+1,t.j+1));
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i][t.j+1])+","+to_string(t.i)+","+to_string(t.j+1)+"),",t.i,t.j+1));
+                }
+        }
+        else if(t.i == dp.size()-1){
+                if(dp[t.i-1][t.j+1]>dp[t.i][t.j+1]){
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i-1][t.j+1])+","+to_string(t.i-1)+","+to_string(t.j+1)+"),",t.i-1,t.j+1));
+                }
+                else if(dp[t.i-1][t.j+1]<dp[t.i][t.j+1]){
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i][t.j+1])+","+to_string(t.i)+","+to_string(t.j+1)+"),",t.i,t.j+1));
+                }
+                else{
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i-1][t.j+1])+","+to_string(t.i-1)+","+to_string(t.j+1)+"),",t.i-1,t.j+1));
+                    q.push(Pair(t.psf+"("+to_string(arr[t.i][t.j+1])+","+to_string(t.i)+","+to_string(t.j+1)+"),",t.i,t.j+1));
+                }
+        }
+        else{
+            int m = max(max(dp[t.i][t.j+1],dp[t.i+1][t.j+1]),dp[t.i-1][t.j+1]);
+
+            if(m == dp[t.i][t.j+1]){
+                q.push(Pair(t.psf+"("+to_string(arr[t.i][t.j+1])+","+to_string(t.i)+","+to_string(t.j+1)+"),",t.i,t.j+1));
+            }
+            if(m == dp[t.i+1][t.j+1]){
+                q.push(Pair(t.psf+"("+to_string(arr[t.i+1][t.j+1])+","+to_string(t.i+1)+","+to_string(t.j+1)+"),",t.i+1,t.j+1));
+            }
+            if(dp[t.i-1][t.j+1]){
+                q.push(Pair(t.psf+"("+to_string(arr[t.i-1][t.j+1])+","+to_string(t.i-1)+","+to_string(t.j+1)+"),",t.i-1,t.j+1));
+            }
+
+        }
+    }
+    
+}
+
+int main()
+{
+    vector<vector<int>> arr(4,vector<int>(4));
+
+    for(int i=0;i<4;i++){
+        for(int j=0;j<4;j++){
+            cin>>arr[i][j];
+        }
+    }
+
+    // for(int i=0;i<arr.size();i++){
+    //     for(int j=0;j<arr[0].size();j++){
+    //         cout<<arr[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+
+    solve(arr);
+}
