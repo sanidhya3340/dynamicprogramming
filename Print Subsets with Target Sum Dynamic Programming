@@ -1,0 +1,78 @@
+//Print Subsets with Target Sum Dynamic Programming
+#include<bits/stdc++.h>
+using namespace std;
+
+class Pair{
+public:
+    int i;
+    int j;
+    string psf;
+
+    Pair(int ii,int ij,string ipsf){
+        i =ii;
+        j = ij;
+        psf = ipsf;
+    }
+};
+
+void solve(vector<int>arr,int s){
+    vector<vector<bool>>dp(arr.size()+1,vector<bool>(s+1,false));
+
+    for(int i=0;i<arr.size()+1;i++){
+        dp[i][0] = true;
+    }
+
+    for(int i=1;i<arr.size()+1;i++){
+        for(int j=1;j<s+1;j++){
+            if(dp[i-1][j] == true){
+                dp[i][j] = true;
+            }
+            else if(j - arr[i-1]>=0 && dp[i-1][j-arr[i-1]] == true){
+                dp[i][j] = true;
+            }
+        }
+    }
+
+    if(dp[arr.size()][s]){
+        cout<<"true"<<endl;
+    }
+    else{
+        return;
+    }
+
+
+    queue<Pair>q;
+    q.push(Pair(arr.size(),s,""));
+
+    while(!q.empty()){
+            Pair t = q.front();
+            q.pop();
+            if(t.i == 0 || t.j == 0){
+                cout<<t.psf<<endl;
+            }
+            else{
+                bool exc = dp[t.i-1][t.j];
+                if(exc){
+                    q.push(Pair(t.i-1,t.j,t.psf));
+                }
+
+                if(t.j >= arr[t.i-1]){
+                    bool inc = dp[t.i - 1][t.j - arr[t.i - 1]];
+                    if(inc){
+                        q.push(Pair(t.i-1,t.j - arr[t.i-1],to_string(arr[t.i-1])+" "+t.psf));
+                    }
+                }
+            }
+    }
+}
+
+int main()
+{
+    int n;cin>>n;
+    vector<int>arr(n);
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    int s;cin>>s;
+    solve(arr,s);
+}
