@@ -1,0 +1,81 @@
+//Paths of 0-1 Knapsack Problem Dynamic Programming
+#include<bits/stdc++.h>
+using namespace std;
+
+class Pair{
+public:
+    int i;
+    int j;
+    string psf;
+
+    Pair(int ii,int ij,string ipsf){
+        i =ii;
+        j = ij;
+        psf = ipsf;
+    }
+};
+
+void solve(vector<int>profit,vector<int>weight,int s){
+    vector<vector<int>>dp(profit.size()+1,vector<int>(s+1));
+
+    for(int i=0;i<profit.size()+1;i++){
+        dp[i][0]=0;
+    }
+    for(int i=0;i<s+1;i++){
+        dp[0][i]=0;
+    }
+
+    for(int i=1;i<profit.size()+1;i++){
+        for(int j=1;j<s+1;j++){
+            if(weight[i-1]>j){
+                dp[i][j] = dp[i-1][j];
+
+            }
+            else{
+                dp[i][j] = max(dp[i-1][j],profit[i-1]+dp[i-1][j-weight[i-1]]);
+            }
+        }
+    }
+
+    cout<<dp[profit.size()][s]<<endl;
+
+
+    queue<Pair>q;
+
+    q.push(Pair(profit.size(),s,""));
+
+    while(!q.empty()){
+        Pair t = q.front();
+        q.pop();
+
+        if(t.i ==0 || t.j == 0){
+            cout<<t.psf<<endl;
+        }
+        else{
+            if(dp[t.i-1][t.j]==dp[t.i][t.j]){
+                q.push(Pair(t.i-1,t.j,t.psf));
+            }
+
+            q.push(Pair(t.i-1,t.j - weight[t.i-1],to_string(weight[t.i-1])+" "+t.psf));
+            }
+    }
+    
+}
+
+int main()
+{
+    int n;cin>>n;
+    vector<int>profit(n);
+    for(int i=0;i<n;i++){
+        cin>>profit[i];
+    }
+
+    vector<int>weight(n);
+    for(int i=0;i<n;i++){
+        cin>>weight[i];
+    }
+
+
+    int s;cin>>s;
+    solve(profit,weight,s);
+}
