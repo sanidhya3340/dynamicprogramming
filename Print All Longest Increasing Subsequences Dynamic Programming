@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Pair{
+public:
+    int l;
+    int i;
+    int v;
+    string psf;
+    
+    Pair(int il,int ii,int iv,string ipsf){
+        l = il;
+        i = ii;
+        v = iv;
+        psf = ipsf;
+    }
+};
+
+int main(){
+    int n;cin>>n;
+    int arr[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    
+    int dp[n];
+    
+    dp[0] = 1;
+    int omax=INT_MIN;
+    
+    for(int i=0;i<n;i++){
+        int max = 0;
+        
+        for(int j=0;j<i;j++){
+            if(arr[j]<=arr[i]){
+                if(dp[j]>max){
+                    max=dp[j];
+                }
+            }
+        }
+        
+        dp[i]= max+1;
+        if(dp[i]>omax){
+            omax = dp[i];
+        }
+    }
+    cout<<omax<<endl;
+    queue<Pair>q;
+    for(int i=0;i<n;i++){
+        if(omax == dp[i]){
+            q.push(Pair(dp[i],i,arr[i],to_string(arr[i])));
+        }
+    }
+    
+    while(!q.empty()){
+        Pair t = q.front();
+        q.pop();
+        
+        if(t.i == 0){
+            cout<<t.psf<<endl;
+            continue;
+        }
+        
+        for(int i=0;i<t.i;i++){
+            if(dp[i] == t.l-1 && dp[i]<t.v){
+                q.push(Pair(dp[i],i,arr[i],to_string(arr[i])+"->"+t.psf));
+            }
+        }
+    }
+
+}
+
