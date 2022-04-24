@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;cin>>n;
+    int arr[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    
+    int dp[n];
+    
+    dp[0]=arr[0];
+    
+    int omax=0;
+    
+    for(int i=0;i<n;i++){
+        int max=-1;
+        
+        for(int j=0;j<i;j++){
+            if(arr[j]<=arr[i]){
+                if(max==-1){
+                    max=dp[j];
+                }
+                else if(dp[j]>max){
+                    max=dp[j];
+                }
+            }
+        }
+        
+        if(max==-1)
+        dp[i] = arr[i];
+        else
+        dp[i] = arr[i]+max;
+        
+        if(dp[i]>omax){
+            omax=dp[i];
+        }
+    }
+    
+    cout<<omax;
+}
