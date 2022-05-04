@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int solve(string s1,string s2){
+    int n = s1.length();
+    int dpt[n][n];
+    int dpf[n][n];
+
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            dpt[i][j] = 0;
+            dpf[i][j] = 0;
+        }
+    }
+
+    for(int g=0;g<n;g++){
+        for(int i=0,j=g;j<n;i++,j++){
+            if(g==0){
+                if(s1[i] == 'T'){
+                    dpt[i][j] = 1;
+                    dpf[i][j] = 0;
+                }
+                else{
+                    dpt[i][j] = 0;
+                    dpf[i][j] = 1;
+                }
+            }else{
+                for(int k=i;k<j;k++){
+                    char oprtr = s2[k];
+                    int ltc = dpt[i][k];
+                    int rtc = dpt[k+1][j];
+                    int lfc = dpf[i][k];
+                    int rfc = dpf[k+1][j];
+                    if(oprtr == '&'){
+                        // cout<<i<<" "<<j<<" "<<ltc<<" "<<rtc<<" "<<lfc<<" "<<rfc<<endl;
+                        dpt[i][j] += ltc*rtc;
+                        dpf[i][j] += lfc*rtc + ltc*rfc + lfc*rfc;
+                    }
+                    else if(oprtr == '|'){
+                        dpt[i][j] += ltc*rtc + lfc*rtc + ltc*rfc;
+                        dpf[i][j] += lfc*rfc;
+                    }else{
+                        dpt[i][j] += ltc*rfc+lfc*rtc;
+                        dpf[i][j] += lfc*rfc+ltc*rtc;
+                    }
+                }
+            }
+        }
+    }
+    // for(int i=0;i<n;i++){
+    //     for(int j=0;j<n;j++){
+    //         cout<<dpt[i][j]<<dpf[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    return dpt[0][n-1];
+}
+
+int main(){
+    string str;cin>>str;
+    string s2;cin>>s2;
+
+
+
+    cout<<solve(str,s2);
+}
