@@ -1,0 +1,51 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int solve(vector<int>keys,vector<int>f,int n){
+    
+    int dp[n][n];   
+    for(int g=0;g<n;g++){
+        for(int i=0,j=g;j<n;i++,j++){
+            if(g==0){
+                dp[i][j] = f[i];
+            }else if(g==1){
+                int f1 = f[i];
+                int f2 = f[j];
+                dp[i][j] = min(f1+2*f2,f2+2*f1);
+            }
+            else{
+                int min = INT_MAX;
+                int fs = 0;
+                for(int x=i;x<=j;x++){
+                    fs+=f[x];
+                }
+                for(int k=i;k<=j;k++){
+                    int left = k==i ? 0 : dp[i][k-1];
+                    int right = k==j ? 0 : dp[k+1][j];
+                    if(left+right +fs<min){
+                        min = left + right + fs;
+                    }
+                }
+                dp[i][j] = min;
+            }
+        }
+    }
+    
+    
+    return dp[0][n-1];   
+}
+
+int main(){
+    int n;cin>>n;
+    vector<int>arr1(n);
+    vector<int>arr2(n);
+    for(int i=0;i<n;i++){
+        cin>>arr1[i];
+    }
+    for(int i=0;i<n;i++){
+        cin>>arr2[i];
+    }
+    
+
+    cout<<solve(arr1,arr2,n);
+}
