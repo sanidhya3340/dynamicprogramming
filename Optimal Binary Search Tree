@@ -3,7 +3,12 @@ using namespace std;
 
 int solve(vector<int>keys,vector<int>f,int n){
     
-    int dp[n][n];   
+    int dp[n][n]; 
+    int psa[n];
+    psa[0] = f[0];
+    for(int i=1;i<n;i++){
+        psa[i] = psa[i-1] + f[i];
+    }
     for(int g=0;g<n;g++){
         for(int i=0,j=g;j<n;i++,j++){
             if(g==0){
@@ -15,10 +20,8 @@ int solve(vector<int>keys,vector<int>f,int n){
             }
             else{
                 int min = INT_MAX;
-                int fs = 0;
-                for(int x=i;x<=j;x++){
-                    fs+=f[x];
-                }
+                int fs = psa[j] - (i==0 ? 0 : psa[i-1]);
+                
                 for(int k=i;k<=j;k++){
                     int left = k==i ? 0 : dp[i][k-1];
                     int right = k==j ? 0 : dp[k+1][j];
