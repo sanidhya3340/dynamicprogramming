@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int solve(string s){
+    bool dp[s.length()][s.length()];
+
+    for(int g=0;g<s.length();g++){
+        for(int i=0,j=g;j<s.length();i++,j++){
+            if(g==0){
+                dp[i][j] = true;
+            }else if(g==1){
+                dp[i][j] = s[j] == s[i];
+            }else{
+                if(s[i] == s[j] && dp[i+1][j-1]==true){
+                    dp[i][j] = true;
+                }else{
+                    dp[i][j] = false;
+                }
+            }
+        }
+    }
+
+    int dp1[s.length()];
+    dp1[0] = 0;
+
+    for(int j=1;j<s.length();j++){
+        if(dp[0][j]){
+            dp1[j] = 0;
+        }
+        else{
+            int mn = INT_MAX;
+            for(int i=j;i>=1;i--){
+                if(dp[i][j]){
+                    if(dp1[i-1]<mn){
+                        mn = dp1[i-1];
+                    }
+                }
+            }
+            dp1[j] = mn+1;
+        }
+
+        
+    }
+
+    return dp1[s.length()-1]; 
+}
+
+int main(){
+    string s;cin>>s;
+
+    cout<<solve(s);
+}
